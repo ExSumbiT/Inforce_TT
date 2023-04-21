@@ -35,6 +35,7 @@ class MenuUploadView(generics.CreateAPIView):
 class CurrentDayMenuView(generics.ListAPIView):
     queryset = Menu.objects.filter(date=date.today())
     serializer_class = MenuSerializer
+    permission_classes = (permissions.IsAuthenticated, IsNotRestaurant)
 
 
 class VoteCreateView(generics.CreateAPIView):
