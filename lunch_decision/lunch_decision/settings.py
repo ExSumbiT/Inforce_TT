@@ -31,20 +31,22 @@ DEBUG = os.environ.get("DEBUG", False)
 
 ALLOWED_HOSTS = ["*"]
 
-AUTH_USER_MODEL = "lunch_service.Employee"
+AUTH_USER_MODEL = "employee.Employee"
 
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
+    # "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "django.contrib.staticfiles",
+    # "django.contrib.staticfiles",
     "rest_framework",
     "corsheaders",
-    "lunch_service",
+    "token_auth",
+    "employee",
+    "restaurant",
 ]
 
 REST_FRAMEWORK = {
@@ -73,6 +75,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "token_auth.version_middleware.VersionMiddleware",
 ]
 
 ROOT_URLCONF = "lunch_decision.urls"

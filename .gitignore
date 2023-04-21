@@ -1,1 +1,4 @@
 /venv
+**/migrations
+.pytest*
+**/__pycache__

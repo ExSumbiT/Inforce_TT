@@ -1,0 +1,1 @@
+docker-compose run --rm dev python manage.py makemigrations lunch_service

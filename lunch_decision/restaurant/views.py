@@ -1,20 +1,17 @@
 from rest_framework import generics, permissions
 from django.db.models import Count
-from .models import Employee, Restaurant, Menu, Vote
-from .permissions import IsSuperUser, IsRestaurant, IsNotRestaurant
+from .models import Restaurant, Menu, Vote
+from lunch_decision.permissions import (
+    IsSuperUser,
+    IsRestaurant,
+    IsNotRestaurant,
+)
 from .serializers import (
-    EmployeeSerializer,
     RestaurantSerializer,
     MenuSerializer,
     VoteSerializer,
 )
 from datetime import date
-
-
-class CreateEmployeeView(generics.CreateAPIView):
-    queryset = Employee.objects.all()
-    serializer_class = EmployeeSerializer
-    permission_classes = (permissions.IsAuthenticated, IsSuperUser)
 
 
 class RestaurantCreateView(generics.CreateAPIView):
