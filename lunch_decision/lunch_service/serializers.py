@@ -22,7 +22,9 @@ class EmployeeSerializer(serializers.ModelSerializer):
             "first_name": {"required": True},
             "last_name": {"required": True},
             "username": {
-                "validators": [UniqueValidator(queryset=Employee.objects.all())]
+                "validators": [
+                    UniqueValidator(queryset=Employee.objects.all())
+                ]
             },
         }
 
@@ -101,7 +103,9 @@ class MenuSerializer(serializers.ModelSerializer):
         }
 
     def validate_unique_restaurant_and_date(self, attrs):
-        restaurant = Restaurant.objects.get(employee=self.context["request"].user)
+        restaurant = Restaurant.objects.get(
+            employee=self.context["request"].user
+        )
         menu_date = attrs.get("date", date.today())
 
         if Menu.objects.filter(restaurant=restaurant, date=menu_date).exists():
@@ -134,7 +138,9 @@ class VoteSerializer(serializers.ModelSerializer):
         menu = attrs["menu"]
         vote_date = attrs.get("date", date.today())
 
-        if Vote.objects.filter(employee=employee, menu=menu, date=vote_date).exists():
+        if Vote.objects.filter(
+            employee=employee, menu=menu, date=vote_date
+        ).exists():
             raise serializers.ValidationError(
                 "You have already voted for this menu today."
             )
