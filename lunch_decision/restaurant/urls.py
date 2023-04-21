@@ -15,7 +15,7 @@ urlpatterns = [
     ),
     path("menu/upload/", MenuUploadView.as_view(), name="upload_menu"),
     path("menu/today/", CurrentDayMenuView.as_view(), name="current_day_menu"),
-    path("vote/", VoteCreateView.as_view(), name="create_vote"),
+    path("vote/", VoteCreateView.as_view(), name="vote"),
     path(
         "vote/today/",
         CurrentDayResultsView.as_view(),
