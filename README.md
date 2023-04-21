@@ -15,22 +15,7 @@ Usage:
 ```
 git clone https://github.com/ExSumbiT/Inforce_TT.git
 cd Inforce_TT
-# create venv >python -m venv venv
-# >venv/Scripts/activate or >source venv/bin/activate
-pip install -r requirements.txt
-```
-
-Apply migrations:
-
-```
-docker-compose run --rm dev python manage.py makemigrations
-docker-compose run --rm dev python manage.py migrate
-```
-
-Run project in docker:
-
-```
-docker-compose up dev
+docker-compose up --build
 ```
 
 Endpoints:
@@ -47,16 +32,10 @@ api/v1/restaurant/vote/today/ - Getting results for the current day (Need to be 
 
 Command, to run tests:
 ```
-docker-compose run --rm dev python manage.py test
-# or
-cd lunch_decision
-python manage.py test
+docker exec inforce_tt-dev-1 python manage.py test
 ```
 
 Command, to create superuser:
 ```
-docker-compose run --rm dev python manage.py createsuperuser
-# or
-cd lunch_decision
-python manage.py createsuperuser
+docker exec -it inforce_tt-dev-1 python manage.py createsuperuser
 ```
