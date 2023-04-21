@@ -15,23 +15,7 @@ services:
     networks:
       - app_network
 
-  # web:
-  #   build: .
-  #   command: >
-  #     sh -c "python manage.py migrate &&
-  #            python manage.py collectstatic --noinput &&
-  #            gunicorn lunch_decision.wsgi:application --bind 0.0.0.0:8000"
-  #   volumes:
-  #     - .:/app
-  #   ports:
-  #     - "8000:8000"
-  #   depends_on:
-  #     - db
-  #   networks:
-  #     - app_network
-
   dev:
-    # extends: web
     build: .
     command: python manage.py runserver 0.0.0.0:8000
     environment:
