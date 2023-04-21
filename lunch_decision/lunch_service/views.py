@@ -1,6 +1,7 @@
 from rest_framework import generics, permissions
+from django.db.models import Count
 from .models import Employee, Restaurant, Menu, Vote
-from .permissions import IsSuperUser, IsRestaurant
+from .permissions import IsSuperUser, IsRestaurant, IsNotRestaurant
 from .serializers import (
     EmployeeSerializer,
     RestaurantSerializer,
@@ -27,6 +28,12 @@ class MenuUploadView(generics.CreateAPIView):
     serializer_class = MenuSerializer
     permission_classes = (permissions.IsAuthenticated, IsRestaurant)
 
+    def perform_create(self, serializer):
+        # Retrieve the authenticated user's restaurant
+        restaurant = Restaurant.objects.get(employee=self.request.user)
+        today = date.today()
+        serializer.save(restaurant=restaurant, date=today)
+
 
 class CurrentDayMenuView(generics.ListAPIView):
     queryset = Menu.objects.filter(date=date.today())
@@ -36,9 +43,23 @@ class CurrentDayMenuView(generics.ListAPIView):
 class VoteCreateView(generics.CreateAPIView):
     queryset = Vote.objects.all()
     serializer_class = VoteSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated, IsNotRestaurant)
+
+    def perform_create(self, serializer):
+        employee = self.request.user
+        today = date.today()
+        serializer.save(employee=employee, date=today)
 
 
 class CurrentDayResultsView(generics.ListAPIView):
-    queryset = Vote.objects.filter(date=date.today())
-    serializer_class = VoteSerializer
+    serializer_class = MenuSerializer
+
+    def get_queryset(self):
+        today = date.today()
+        # Get the menus for the current day
+        queryset = Menu.objects.filter(date=today)
+
+        # Annotate the queryset with the count of votes for each menu
+        queryset = queryset.annotate(vote_count=Count("vote"))
+
+        return queryset
