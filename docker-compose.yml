@@ -20,6 +20,7 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     environment:
       - DEBUG=True
+      - SECRET_KEY = django-insecure-*%vr9)e05mi*@-^qz@x%wb7z9z70l%j@jyr0*g)k!b3685&_m_
       - POSTGRES_DB=your_database_name
       - POSTGRES_USER=your_database_user
       - POSTGRES_PASSWORD=your_database_password
