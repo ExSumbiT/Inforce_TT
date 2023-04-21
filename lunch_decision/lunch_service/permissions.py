@@ -16,4 +16,21 @@ class IsRestaurant(permissions.BasePermission):
     """
 
     def has_permission(self, request, view):
-        return bool(request.user and request.user.is_restaurant)
+        return bool(
+            request.user
+            and request.user.is_authenticated
+            and request.user.is_restaurant
+        )
+
+
+class IsNotRestaurant(permissions.BasePermission):
+    """
+    Custom permission to only allow staff users to access certain views
+    """
+
+    def has_permission(self, request, view):
+        return bool(
+            request.user
+            and request.user.is_authenticated
+            and not request.user.is_restaurant
+        )
