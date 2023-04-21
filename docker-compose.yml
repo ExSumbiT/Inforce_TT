@@ -17,7 +17,7 @@ services:
 
   dev:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    entrypoint: [ "./entrypoint.sh" ]
     environment:
       - DEBUG=True
       - SECRET_KEY = django-insecure-*%vr9)e05mi*@-^qz@x%wb7z9z70l%j@jyr0*g)k!b3685&_m_
@@ -25,8 +25,6 @@ services:
       - POSTGRES_USER=your_database_user
       - POSTGRES_PASSWORD=your_database_password
       - POSTGRES_HOST=db
-    volumes:
-      - ./lunch_decision:/app
     ports:
       - "8000:8000"
     depends_on:
