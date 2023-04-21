@@ -2,3 +2,4 @@
 **/migrations
 .pytest*
 **/__pycache__
+.coverage
