@@ -17,6 +17,12 @@ git clone https://github.com/ExSumbiT/Inforce_TT.git
 cd Inforce_TT
 docker-compose up --build
 ```
+*if "exec ./entrypoint.sh: no such file or directory", do this:
+```
+git config --global core.autocrlf input
+git rm --cached -r .
+git reset --hard
+```
 
 Endpoints:
 ```
