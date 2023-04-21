@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from .models import Employee, Restaurant, Menu, Vote
+from datetime import date
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
@@ -76,13 +77,69 @@ class RestaurantSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
+class RestaurantDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Restaurant
+        fields = ("id", "name", "address", "description")
+
+
 class MenuSerializer(serializers.ModelSerializer):
+    restaurant = RestaurantDetailSerializer(read_only=True)
+    vote_count = serializers.IntegerField(read_only=True, required=False)
+
     class Meta:
         model = Menu
-        fields = "__all__"
+        fields = (
+            "id",
+            "restaurant",
+            "date",
+            "items",
+            "vote_count",
+        )
+        extra_kwargs = {
+            "date": {"required": False},
+        }
+
+    def validate_unique_restaurant_and_date(self, attrs):
+        restaurant = Restaurant.objects.get(employee=self.context["request"].user)
+        menu_date = attrs.get("date", date.today())
+
+        if Menu.objects.filter(restaurant=restaurant, date=menu_date).exists():
+            raise serializers.ValidationError(
+                "A menu from this restaurant already exists for this date."
+            )
+        return attrs
+
+    def validate(self, attrs):
+        attrs = self.validate_unique_restaurant_and_date(attrs)
+        return attrs
 
 
 class VoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vote
-        fields = "__all__"
+        fields = (
+            "id",
+            "employee",
+            "menu",
+            "date",
+        )
+        extra_kwargs = {
+            "employee": {"required": False},
+            "date": {"required": False},
+        }
+
+    def validate_unique_employee_and_date(self, attrs):
+        employee = self.context["request"].user
+        menu = attrs["menu"]
+        vote_date = attrs.get("date", date.today())
+
+        if Vote.objects.filter(employee=employee, menu=menu, date=vote_date).exists():
+            raise serializers.ValidationError(
+                "You have already voted for this menu today."
+            )
+        return attrs
+
+    def validate(self, attrs):
+        attrs = self.validate_unique_employee_and_date(attrs)
+        return attrs
